@@ -1,0 +1,27 @@
+# SPDX-FileCopyrightText: 2021 Inria
+# SPDX-License-Identifier: LGPL-2.1-only
+
+config BOARD
+    default "e77-900mbl-01" if BOARD_E77_900MBL_01
+
+config BOARD_E77_900MBL_01
+    bool
+    default y
+    select CPU_MODEL_STM32WLE5CC
+
+    # Clock configuration
+    select BOARD_HAS_HSE
+    select BOARD_HAS_LSE
+
+config CLOCK_HSE
+    default 32000000
+
+config E77_900MBL_01_ENABLE_3P3V
+    bool "E77_900MBL_01 Development Kit - Enable 3.3V output"
+    default y
+
+config E77_900MBL_01_ENABLE_5V
+    bool "E77_900MBL_01 Development Kit - Enable 5V output"
+    default y
+
+source "$(RIOTBOARD)/common/stm32/Kconfig"
