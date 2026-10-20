@@ -26,6 +26,7 @@
 #include "irq_arch.h"
 #include "macros/xtstr.h"
 #include "panic.h"
+#include "pfic.h"
 #include "plic.h"
 #include "sched.h"
 #include "vendor/riscv_csr.h"
@@ -66,6 +67,9 @@ void riscv_irq_init(void)
     }
     if (IS_ACTIVE(MODULE_PERIPH_CLIC)) {
         clic_init();
+    }
+    if (IS_ACTIVE(MODULE_PERIPH_PFIC)) {
+        pfic_init();
     }
 
     /* Enable external interrupts */
@@ -151,6 +155,9 @@ __attribute((used)) static void handle_trap(uword_t mcause)
         default:
             if (IS_ACTIVE(MODULE_PERIPH_CLIC)) {
                 clic_isr_handler(trap);
+            }
+            else if (IS_ACTIVE(MODULE_PERIPH_PFIC)) {
+                pfic_isr_handler(trap);
             }
             else {
                 /* Unknown interrupt */

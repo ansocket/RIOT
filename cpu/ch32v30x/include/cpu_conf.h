@@ -24,6 +24,11 @@ extern "C" {
 #define CPU_DEFAULT_IRQ_PRIO (0xFF)
 
 /**
+ * @brief   Number of PFIC interrupts (16 core + 88 peripheral interrupts)
+ */
+#define PFIC_NUM_INTERRUPTS             (104)
+
+/**
  * @brief   The gd32v doesn't use the MIE CSR, but uses the CLIC instead
  */
 #define HAVE_CSR_MIE                    (0)

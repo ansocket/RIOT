@@ -1,7 +1,7 @@
 CPU_CORE := rv32imafc
 
 # FEATURES_PROVIDED += arch_nuclei
-# FEATURES_PROVIDED += periph_clic
+FEATURES_PROVIDED += periph_pfic
 # FEATURES_PROVIDED += periph_gpio
 # FEATURES_PROVIDED += periph_gpio_irq
 # FEATURES_PROVIDED += periph_gpio_ll
