@@ -1,6 +1,6 @@
 USEMODULE += periph
 
-# FEATURES_REQUIRED += periph_clic
+FEATURES_REQUIRED += periph_pfic
 
 # ifneq (,$(filter periph_pm,$(USEMODULE)))
 #   FEATURES_REQUIRED += periph_wdt

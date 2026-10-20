@@ -20,7 +20,7 @@
 #include <inttypes.h>
 
 #include "cpu.h"
-#include "clic.h"
+#include "pfic.h"
 #include "kernel_defines.h"
 #include "macros/units.h"
 
