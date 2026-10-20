@@ -46,6 +46,24 @@ extern "C" {
 #define TIMER_NUMOF             (1)
 /** @} */
 
+/**
+ * @name    UART configuration
+ * @{
+ */
+static const uart_conf_t uart_config[] = {
+    {
+        .dev = USART1,
+        .rcc_mask = RCC_APB2PCENR_USART1EN,
+        .rx_pin = GPIO_PIN(PORT_A, 10),
+        .tx_pin = GPIO_PIN(PORT_A, 9),
+        .bus = APB2,
+        .irqn = USART1_IRQn,
+    },
+};
+
+#define UART_NUMOF              ARRAY_SIZE(uart_config)
+/** @} */
+
 #ifdef __cplusplus
 }
 #endif

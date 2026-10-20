@@ -58,8 +58,11 @@ void riscv_irq_init(void)
         write_csr(mtvec, (uintptr_t)&trap_entry);
     }
 
-    /* Clear all interrupt enables */
-    write_csr(mie, 0);
+    /* Clear all interrupt enables. QingKe cores (PFIC) have no mie CSR,
+     * accessing it raises an illegal instruction exception. */
+    if (!IS_ACTIVE(MODULE_PERIPH_PFIC)) {
+        write_csr(mie, 0);
+    }
 
     /* Initial PLIC external interrupt controller */
     if (IS_ACTIVE(MODULE_PERIPH_PLIC)) {
@@ -73,7 +76,9 @@ void riscv_irq_init(void)
     }
 
     /* Enable external interrupts */
-    set_csr(mie, MIP_MEIP);
+    if (!IS_ACTIVE(MODULE_PERIPH_PFIC)) {
+        set_csr(mie, MIP_MEIP);
+    }
 
     /*  Set default state of mstatus */
     set_csr(mstatus, MSTATUS_DEFAULT);
