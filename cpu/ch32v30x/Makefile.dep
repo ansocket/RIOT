@@ -2,6 +2,10 @@ USEMODULE += periph
 
 FEATURES_REQUIRED += periph_pfic
 
+ifneq (,$(filter periph_timer,$(USEMODULE)))
+  FEATURES_REQUIRED += periph_coretimer
+endif
+
 # ifneq (,$(filter periph_pm,$(USEMODULE)))
 #   FEATURES_REQUIRED += periph_wdt
 # endif

@@ -37,6 +37,15 @@
 extern "C" {
 #endif
 
+/**
+ * @name    Timer configuration
+ *
+ * One timer via the QingKe SysTick (core timer).
+ * @{
+ */
+#define TIMER_NUMOF             (1)
+/** @} */
+
 #ifdef __cplusplus
 }
 #endif
