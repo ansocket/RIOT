@@ -22,6 +22,13 @@
 extern "C" {
 #endif
 
+/**
+ * @name    System timer frequency
+ * @{
+ */
+#define CONFIG_ZTIMER_USEC_BASE_FREQ (CLOCK_AHB / 8) /**< ztimer base = SysTick */
+/** @} */
+
 // /**
 //  * @name    Button pin definitions
 //  * @{

@@ -28,6 +28,10 @@
 extern "C" {
 #endif
 
+/**
+ * @brief   timer_set() is provided by the SysTick core timer driver
+ */
+#define PERIPH_TIMER_PROVIDES_SET
 
 #ifdef __cplusplus
 }
