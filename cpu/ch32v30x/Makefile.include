@@ -1,0 +1,24 @@
+RAM_START_ADDR ?= 0x20000000
+ROM_START_ADDR ?= 0x00000000
+
+ifneq (,$(filter ch32v307%bt6,$(CPU_MODEL)))
+  RAM_LEN ?= 64K
+  ROM_LEN ?= 256K
+else
+  $(error CPU model $(CPU_MODEL) not supported)
+endif
+
+ROM_LEN := $(shell printf "0x%x" $$(($(ROM_LEN:%K=%*1024))))
+
+RIOTBOOT_HDR_LEN ?= 0x400
+ifneq (,$(filter usbus_dfu tinyusb_dfu,$(USEMODULE)))
+  RIOTBOOT_LEN ?= 0x4000
+else
+  RIOTBOOT_LEN ?= 0x1000
+endif
+
+LINKER_SCRIPT ?= riscv.ld
+
+CFLAGS += -DCPU_MODEL_$(call uppercase_and_underscore,$(CPU_MODEL))
+
+include $(RIOTCPU)/riscv_common/Makefile.include

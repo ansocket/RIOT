@@ -63,6 +63,7 @@ FEATURES_EXISTING := \
     cpu_cc2538 \
     cpu_cc26x0_cc13x0 \
     cpu_cc26x2_cc13x2 \
+    cpu_ch32v30x \
     cpu_check_address \
     cpu_core_atmega \
     cpu_core_atxmega \
