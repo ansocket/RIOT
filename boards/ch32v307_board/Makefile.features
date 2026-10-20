@@ -1,0 +1,3 @@
+CPU_MODEL = ch32v307cbt6
+
+include $(RIOTBOARD)/common/ch32v/Makefile.features
