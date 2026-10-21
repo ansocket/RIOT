@@ -66,6 +66,38 @@ enum {
  */
 #define GPIO_PIN(x, y)          ((gpio_t)(((x) << 4) | (y)))
 
+#ifndef DOXYGEN
+/**
+ * @brief   Override GPIO mode options
+ *
+ * Bits 0-3 hold the CNF/MODE nibble of the CFGxR registers, bit 4 is the
+ * OUTDR value which selects pull-up (1) or pull-down (0) for inputs.
+ * @{
+ */
+#define HAVE_GPIO_MODE_T
+typedef enum {
+    GPIO_IN     = 0x04,     /**< input w/o pull R */
+    GPIO_IN_PD  = 0x08,     /**< input with pull-down */
+    GPIO_IN_PU  = 0x18,     /**< input with pull-up */
+    GPIO_OUT    = 0x03,     /**< push-pull output, 50 MHz */
+    GPIO_OD     = 0x07,     /**< open-drain output w/o pull R, 50 MHz */
+    GPIO_OD_PU  = 0xff,     /**< not supported by HW */
+} gpio_mode_t;
+/** @} */
+
+/**
+ * @brief   Override flank configuration values
+ * @{
+ */
+#define HAVE_GPIO_FLANK_T
+typedef enum {
+    GPIO_RISING  = 1,       /**< emit interrupt on rising flank */
+    GPIO_FALLING = 2,       /**< emit interrupt on falling flank */
+    GPIO_BOTH    = 3,       /**< emit interrupt on both flanks */
+} gpio_flank_t;
+/** @} */
+#endif /* ndef DOXYGEN */
+
 /**
  * @brief   Pin configurations for alternate function use
  *
@@ -85,6 +117,13 @@ typedef enum {
  * @param[in] af        pin configuration
  */
 void gpio_init_af(gpio_t pin, gpio_af_t af);
+
+/**
+ * @brief   Configure a pin as analog input (e.g. for the ADC)
+ *
+ * @param[in] pin       pin to configure
+ */
+void gpio_init_analog(gpio_t pin);
 
 /**
  * @brief   Enable the clock of a peripheral

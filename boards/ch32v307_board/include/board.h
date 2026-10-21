@@ -29,25 +29,27 @@ extern "C" {
 #define CONFIG_ZTIMER_USEC_BASE_FREQ (CLOCK_AHB / 8) /**< ztimer base = SysTick */
 /** @} */
 
-// /**
-//  * @name    Button pin definitions
-//  * @{
-//  */
-// #define BTN0_PIN            GPIO_PIN(PORT_A, 0)
-// #define BTN0_MODE           GPIO_IN_PU
-// #define BTN0_INT_FLANK      GPIO_FALLING
-// /** @} */
+/**
+ * @name    LED (on-board) configuration
+ *
+ * LED0 is labeled LED1 on the board, LED1 is labeled LED2.
+ * Both LEDs are active low.
+ * @{
+ */
+#define LED0_PIN            GPIO_PIN(PORT_A, 15)
+#define LED0_MASK           (1 << 15)
+#define LED0_IS_INVERTED    1
+#define LED0_ON             (GPIOA->BCR = LED0_MASK)
+#define LED0_OFF            (GPIOA->BSHR = LED0_MASK)
+#define LED0_TOGGLE         (GPIOA->OUTDR ^= LED0_MASK)
 
-// /**
-//  * @name    LED (on-board) configuration
-//  * @{
-//  */
-// #define LED0_PIN            GPIO_PIN(PORT_A, 7)
-// #define LED0_MASK           (1 << 7)
-// #define LED0_ON             (GPIOA->BC = LED0_MASK)
-// #define LED0_OFF            (GPIOA->BOP = LED0_MASK)
-// #define LED0_TOGGLE         (GPIOA->OCTL ^= LED0_MASK)
-// /** @} */
+#define LED1_PIN            GPIO_PIN(PORT_B, 4)
+#define LED1_MASK           (1 << 4)
+#define LED1_IS_INVERTED    1
+#define LED1_ON             (GPIOB->BCR = LED1_MASK)
+#define LED1_OFF            (GPIOB->BSHR = LED1_MASK)
+#define LED1_TOGGLE         (GPIOB->OUTDR ^= LED1_MASK)
+/** @} */
 
 #ifdef __cplusplus
 }

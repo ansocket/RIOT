@@ -13,7 +13,7 @@ featrures:
 - On-Board GD-Link Programmer/Debugger (middle mini-USB connector)
 - USB-OTG (left mini-USB connector)
 - Integrated USB to UART bridge (right mini-USB connector)
-- 1 user LED
+- 2 user LEDs (PA15, PB4)
 - 1 user Button
 - 1 reset button
 - Arduino UNO compatible pin headers (except ISP header)

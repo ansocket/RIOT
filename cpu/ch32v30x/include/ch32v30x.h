@@ -27,9 +27,16 @@ extern "C" {
  * @name    PFIC interrupt numbers
  * @{
  */
+#define EXTI0_IRQn              (22)    /**< EXTI line 0 */
+#define EXTI1_IRQn              (23)    /**< EXTI line 1 */
+#define EXTI2_IRQn              (24)    /**< EXTI line 2 */
+#define EXTI3_IRQn              (25)    /**< EXTI line 3 */
+#define EXTI4_IRQn              (26)    /**< EXTI line 4 */
+#define EXTI9_5_IRQn            (39)    /**< EXTI lines 5-9 */
 #define USART1_IRQn             (53)    /**< USART1 global interrupt */
 #define USART2_IRQn             (54)    /**< USART2 global interrupt */
 #define USART3_IRQn             (55)    /**< USART3 global interrupt */
+#define EXTI15_10_IRQn          (56)    /**< EXTI lines 10-15 */
 #define UART4_IRQn              (68)    /**< UART4 global interrupt */
 #define UART5_IRQn              (69)    /**< UART5 global interrupt */
 #define UART6_IRQn              (87)    /**< UART6 global interrupt */
@@ -67,6 +74,29 @@ typedef struct {
 } GPIO_TypeDef;
 
 /**
+ * @brief   Alternate function I/O
+ */
+typedef struct {
+    volatile uint32_t ECR;          /**< Event control */
+    volatile uint32_t PCFR1;        /**< Remap 1 */
+    volatile uint32_t EXTICR[4];    /**< External interrupt configuration */
+    uint32_t RESERVED0;             /**< Reserved */
+    volatile uint32_t PCFR2;        /**< Remap 2 */
+} AFIO_TypeDef;
+
+/**
+ * @brief   External interrupt/event controller
+ */
+typedef struct {
+    volatile uint32_t INTENR;       /**< Interrupt enable */
+    volatile uint32_t EVENR;        /**< Event enable */
+    volatile uint32_t RTENR;        /**< Rising edge trigger enable */
+    volatile uint32_t FTENR;        /**< Falling edge trigger enable */
+    volatile uint32_t SWIEVR;       /**< Software interrupt event */
+    volatile uint32_t INTFR;        /**< Interrupt flag */
+} EXTI_TypeDef;
+
+/**
  * @brief   Universal synchronous asynchronous receiver transmitter
  */
 typedef struct {
@@ -84,6 +114,8 @@ typedef struct {
  * @{
  */
 #define RCC_BASE                (0x40021000UL)  /**< RCC */
+#define AFIO_BASE               (0x40010000UL)  /**< AFIO */
+#define EXTI_BASE               (0x40010400UL)  /**< EXTI */
 #define GPIOA_BASE              (0x40010800UL)  /**< GPIO port A */
 #define GPIO_PORT_OFFSET        (0x400UL)       /**< Distance between ports */
 #define USART1_BASE             (0x40013800UL)  /**< USART1 (APB2) */
@@ -101,6 +133,13 @@ typedef struct {
  * @{
  */
 #define RCC                     ((RCC_TypeDef *)RCC_BASE)
+#define AFIO                    ((AFIO_TypeDef *)AFIO_BASE)
+#define EXTI                    ((EXTI_TypeDef *)EXTI_BASE)
+#define GPIOA                   ((GPIO_TypeDef *)(GPIOA_BASE + 0 * GPIO_PORT_OFFSET))
+#define GPIOB                   ((GPIO_TypeDef *)(GPIOA_BASE + 1 * GPIO_PORT_OFFSET))
+#define GPIOC                   ((GPIO_TypeDef *)(GPIOA_BASE + 2 * GPIO_PORT_OFFSET))
+#define GPIOD                   ((GPIO_TypeDef *)(GPIOA_BASE + 3 * GPIO_PORT_OFFSET))
+#define GPIOE                   ((GPIO_TypeDef *)(GPIOA_BASE + 4 * GPIO_PORT_OFFSET))
 #define USART1                  ((USART_TypeDef *)USART1_BASE)
 #define USART2                  ((USART_TypeDef *)USART2_BASE)
 #define USART3                  ((USART_TypeDef *)USART3_BASE)
