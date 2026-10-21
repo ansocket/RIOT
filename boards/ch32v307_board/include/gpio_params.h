@@ -23,20 +23,21 @@ extern "C" {
 #endif
 
 /**
- * @brief    LED/Button SAUL configuration
+ * @brief    LED SAUL configuration
  */
 static const  saul_gpio_params_t saul_gpio_params[] =
 {
     {
-        .name  = "Wakeup",
-        .pin   = BTN0_PIN,
-        .mode  = BTN0_MODE,
-    },
-    {
-        .name  = "LED0",
+        .name  = "LED1",
         .pin   = LED0_PIN,
         .mode  = GPIO_OUT,
-        .flags = SAUL_GPIO_INIT_CLEAR,
+        .flags = SAUL_GPIO_INVERTED | SAUL_GPIO_INIT_CLEAR,
+    },
+    {
+        .name  = "LED2",
+        .pin   = LED1_PIN,
+        .mode  = GPIO_OUT,
+        .flags = SAUL_GPIO_INVERTED | SAUL_GPIO_INIT_CLEAR,
     },
 };
 
