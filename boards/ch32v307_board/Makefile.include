@@ -4,4 +4,5 @@ PROGRAMMERS_SUPPORTED += wlink
 
 WLINK_CHIP ?= CH32V30X
 
-include $(RIOTBOARD)/common/ch32v/Makefile.include
+# configure the serial interface
+PORT_DARWIN ?= $(firstword $(sort $(wildcard /dev/tty.SLAB_USBtoUART*)))

@@ -6,7 +6,7 @@
 #pragma once
 
 /**
- * @ingroup     boards_gd32vf103c_start
+ * @ingroup     boards_ch32v307_board
  * @{
  *
  * @file

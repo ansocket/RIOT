@@ -1,4 +1,5 @@
 /*
+ * SPDX-FileCopyrightText: 2020 Koen Zandberg <koen@bergzand.net>
  * SPDX-FileCopyrightText: 2023 Gunar Schorcht <gunar@schorcht.net>
  * SPDX-License-Identifier: LGPL-2.1-only
  */
@@ -6,11 +7,11 @@
 #pragma once
 
 /**
- * @ingroup     boards_gd32vf103c_start
+ * @ingroup     boards_ch32v307_board
  * @{
  *
  * @file
- * @brief       Board specific definitions for the GD32VF103C-START board
+ * @brief       Board specific definitions for the YD-CH32V307VCT6 board
  *
  * @author      Marian Buschsieweke <marian.buschsieweke@posteo.net>
  */
@@ -31,11 +32,35 @@
 
 
 #include "periph_cpu.h"
-#include "periph_common_conf.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/* The clock tree is not configured yet, the MCU runs from the HSI with the
+ * reset prescalers (all 1) */
+#define CLOCK_CORECLOCK         MHZ(8)      /**< CPU clock frequency in Hz */
+
+#define CLOCK_AHB               CLOCK_CORECLOCK /**< Equal to the CPU clock */
+#define CLOCK_APB1              CLOCK_AHB       /**< Equal to the AHB clock */
+#define CLOCK_APB2              CLOCK_AHB       /**< Equal to the AHB clock */
+
+/**
+ * @name    RTT/RTC configuration
+ * @{
+ */
+#if CONFIG_BOARD_HAS_LXTAL
+#define RTT_CLOCK_FREQUENCY (32768U)        /**< Low frequency XTAL is used as clock source */
+#else
+#define RTT_CLOCK_FREQUENCY (40000U)        /**< IRC40K is used as clock source */
+#endif
+
+#define RTT_MAX_FREQUENCY   (RTT_CLOCK_FREQUENCY)   /* maximum RTT frequency in Hz */
+
+#ifndef RTT_FREQUENCY
+#define RTT_FREQUENCY       (RTT_MAX_FREQUENCY)     /* RTT frequency in Hz */
+#endif
+/** @} */
 
 /**
  * @name    Timer configuration

@@ -1,6 +1,5 @@
+CPU = ch32v30x
 CPU_MODEL = ch32v307cbt6
 
 # Put defined MCU peripherals here (in alphabetical order)
 FEATURES_PROVIDED += periph_uart
-
-include $(RIOTBOARD)/common/ch32v/Makefile.features
