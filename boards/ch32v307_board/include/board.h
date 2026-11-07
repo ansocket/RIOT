@@ -1,4 +1,6 @@
 /*
+ * SPDX-FileCopyrightText: 2020 Koen Zandberg <koen@bergzand.net>
+ * SPDX-FileCopyrightText: 2023 Gunar Schorcht <gunar@schorcht.net>
  * SPDX-FileCopyrightText: 2024 Marian Buschsieweke
  * SPDX-License-Identifier: LGPL-2.1-only
  */
@@ -6,21 +8,27 @@
 #pragma once
 
 /**
- * @ingroup     boards_gd32vf103c_start
+ * @ingroup     boards_ch32v307_board
  * @{
  *
  * @file
- * @brief       Board specific definitions for the GD32VF103C-START board
+ * @brief       Board specific definitions for the YD-CH32V307VCT6 board
  *
  * @author      Marian Buschsieweke <marian.buschsieweke@posteo.net>
  */
 
-#include "board_common.h"
 #include "periph/gpio.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/**
+ * @name    Xtimer configuration
+ * @{
+ */
+#define XTIMER_WIDTH                (16)
+/** @} */
 
 /**
  * @name    System timer frequency

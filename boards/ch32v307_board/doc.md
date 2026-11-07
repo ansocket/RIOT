@@ -1,100 +1,126 @@
-@defgroup   boards_gd32vf103c_start GD32VF103C-START
+@defgroup   boards_ch32v307_board YD-CH32V307VCT6
 @ingroup    boards
-@brief      Support for the GD32VF103C-START board
-@author     Marian Buschsieweke
+@brief      Support for the YD-CH32V307VCT6 development board
 
 ## Overview
 
-The GD32VF103C-START development board is an official starter kit by GigaDevice
-for the GD32VF103CBT6 MCU, despite the lack of official documentation. It
-featrures:
+The YD-CH32V307VCT6 development board is based on the WCH CH32V307VCT6
+microcontroller in an LQFP100 package. It features:
 
-- GD32VF103CBT6 RISC-V MCU @108MHz
-- On-Board GD-Link Programmer/Debugger (middle mini-USB connector)
-- USB-OTG (left mini-USB connector)
-- Integrated USB to UART bridge (right mini-USB connector)
-- 2 user LEDs (PA15, PB4)
-- 1 user Button
-- 1 reset button
-- Arduino UNO compatible pin headers (except ISP header)
+- A 32-bit QingKe V4F RISC-V core with a single-precision FPU, running at up
+  to 144 MHz
+- 256 KiB of internal Flash and 64 KiB of SRAM (configurable memory split)
+- Two USB Type-C connectors connected to the MCU's USB interfaces
+- An RJ45 Ethernet connector using the MCU's internal 10 Mbit/s PHY
+- A microSD (TF) card slot
+- A W25Q32 SPI Flash (4 MiB) and a 24C64 I2C EEPROM (8 KiB)
+- Two user LEDs (PA15 and PB4) and a power LED
+- Reset, BOOT0, and USB user buttons, plus a BOOT1 jumper
+- 8 MHz and 32.768 kHz crystals
+- GPIO expansion headers and a four-pin programming/debug header
 
-![Image of the GD32VF103C-START board](https://raw.githubusercontent.com/zephyrproject-rtos/zephyr/a0ac2faf9bde45b176f1e8b315ffb1b8a9096166/boards/riscv/gd32vf103c_starter/doc/img/gd32vf103c_starter.jpg)
-
-@warning    The analog pins are labeled A1 - A6 rather than A0 - A5, as would
-            be the correct Arduino naming. The Arduino pin mapping uses the
-            correct Arduino naming, so that apps written for other boards
-            expecting Arduino UNO compatible shields remain compatible.
+![YD-CH32V307VCT6 board and connectors][board-image]
 
 ## Hardware
 
-| MCU               | GD32VF103CBT6                             | Supported |
-|:----------------- |:----------------------------------------- | --------- |
-| Family            | RISC-V with ECLIC                         |           |
-| Vendor            | GigaDevice                                |           |
-| RAM               | 32 KiB                                    |           |
-| Flash             | 128 KiB                                   |           |
-| Frequency         | 108 MHz                                   |           |
-| Power Modes       | 3 (Sleep, Deep Sleep, Standby)            |   yes     |
-| GPIOs             | 37                                        |   yes     |
-| Timers            | 5 x 16-bit timer                          |   yes     |
-| RTC               | 1 x 32-bit counter, 20-bit prescaler      |   yes     |
-| WDT               | 2 x 12-bit counter, 3-bit prescaler       |   yes     |
-| ADC               | 2 x 12-bit units, 16 channels @ 1 Msps    |   yes     |
-| DAC               | 2 x 12-bit channel                        |   yes     |
-| UART              | -                                         |   yes     |
-| USART             | 3                                         |   yes     |
-| SPI               | 3                                         |   yes     |
-| I2C               | 2 x Fast Mode 400 kHz                     |   yes     |
-| I2S               | 2                                         |   no      |
-| CAN               | 2 x CAN 2.0B with up to 1 Mbps            |   no      |
-| PWM               | 6 Channels                                |   yes     |
-| USB               | 1 x USB FS OTG (+ GD-Link + UART bridge)  |   yes     |
-| Vcc               | 3.0V - 3.6V                               |           |
-| Datasheet         | [Datasheet][gd32vf103c-datasheet]         |           |
-| User Manual       | [User Manual][gd32vf103c-manual]          |           |
-| Board Manual      | [Board Manual][gd32vf103c-board-manual]   |           |
+The following table describes the MCU hardware capabilities. Availability in
+RIOT depends on the implementation of the corresponding drivers and board
+configuration.
 
-[gd32vf103c-datasheet]: https://web.archive.org/web/20240117072854/https://gd32mcu.com/data/documents/datasheet/GD32VF103_Datasheet_Rev1.6.pdf
-[gd32vf103c-manual]: https://web.archive.org/web/20240117073025/https://gd32mcu.com/data/documents/userManual/GD32VF103_User_Manual_Rev1.5.pdf
-[gd32vf103c-board-manual]: https://web.archive.org/web/20240117072723/https://en.maritex.com.pl/product/attachment/154626/6f28fdabafb9dff852537ced7bc0aa71
+| MCU               | CH32V307VCT6                                       |
+|:----------------- |:-------------------------------------------------- |
+| Vendor            | WCH                                                |
+| Core              | QingKe V4F, 32-bit RISC-V with FPU                   |
+| Package           | LQFP100                                            |
+| RAM               | 64 KiB with the 256 KiB Flash / 64 KiB SRAM split    |
+| Flash             | 256 KiB with the 256 KiB Flash / 64 KiB SRAM split   |
+| Maximum frequency | 144 MHz                                            |
+| GPIOs             | Up to 80                                           |
+| Timers            | 10                                                 |
+| ADC               | 2 x 12-bit ADC, up to 16 external channels          |
+| DAC               | 2 x 12-bit channels                                |
+| Serial interfaces | 3 USARTs and 5 UARTs                                |
+| SPI / I2S         | 3 SPI interfaces, 2 with I2S support                 |
+| I2C               | 2                                                  |
+| CAN               | 2 x CAN 2.0B                                       |
+| USB               | USB FS OTG and USB HS host/device with built-in PHY |
+| Ethernet          | MAC with an internal 10 Mbit/s PHY                  |
+| Other interfaces  | SDIO, FSMC, DVP                                    |
+| GPIO logic level  | 3.3 V on this board                                |
 
-## Flashing
+The Flash/SRAM split is configurable through the device option bytes. The
+selected split must match the linker configuration used by the application.
+The external W25Q32 Flash and 24C64 EEPROM are separate from internal program
+memory and SRAM.
 
-@warning    Flashing seems to fail with some Arduino UNO compatible boards
-            attached. Remove them and try again.
+### Board connections
 
-By default, flashing is done via OpenOCD using the GD-Link programmer/debugger
-using:
+| Function              | MCU pins / connection                         |
+|:--------------------- |:--------------------------------------------- |
+| User LED 1            | PA15, active high                             |
+| User LED 2            | PB4, active high                              |
+| USB user button       | PB3, active low                               |
+| USB FS connector      | PA11 (D-), PA12 (D+)                           |
+| USB HS connector      | PB6 (D+), PB7 (D-)                             |
+| WCH two-wire debug    | PA13 (SWDIO), PA14 (SWCLK)                     |
+| USART1 (default pins) | PA9 (TX), PA10 (RX)                            |
+| SPI Flash             | PA2 (CS), PA5 (SCK), PA6 (MISO), PA7 (MOSI)     |
+| I2C EEPROM            | PB10 (SCL), PB11 (SDA)                         |
+| Ethernet PHY signals  | PC6 (RXP), PC7 (RXN), PC8 (TXP), PC9 (TXN)     |
+| Ethernet LEDs         | PC0 (link), PC1 (activity)                     |
+
+@note   The microSD interface shares PC8 and PC9 with Ethernet. Check the TF
+        jumpers before using either interface; both cannot use these pins
+        simultaneously. The linked partial schematic documents these
+        connections.
+
+## Flashing and debugging
+
+Use an external WCH-LinkE programmer/debugger in RISC-V mode. The board's USB
+Type-C connectors connect directly to the MCU and do not provide an onboard
+debugger or USB-to-UART bridge.
+
+Connect the programmer to the debug header according to its pin labels:
+
+| WCH-LinkE signal | Board signal |
+|:---------------- |:------------ |
+| GND              | GND          |
+| SWDIO / TMS      | PA13         |
+| SWCLK / TCK      | PA14         |
+
+Use 3.3 V target logic levels. If powering the board through USB, follow the
+programmer's instructions for its target-voltage connection to avoid
+connecting competing power supplies. Keep BOOT0 low for normal execution
+from user Flash and reset the board after programming.
+
+WCH-LinkUtility or the WCH programming tools supplied with MounRiver Studio
+can program a compatible application image. OpenOCD use requires a version
+and configuration supporting both WCH-Link and CH32V307.
+
+## Connecting to serial output
+
+Use an external USB-to-UART adapter with 3.3 V logic levels. For USART1 on its
+default pins, connect the adapter's RX to PA9 (MCU TX), TX to PA10 (MCU RX),
+and GND to GND.
+
+Once the RIOT UART driver and board UART configuration are implemented for
+these pins, open the serial terminal with the adapter's actual device path:
 
 ```shell
-make BOARD=gd32vf103c-start -C path/to/app flash
+make BOARD=ch32v307_board -C examples/basic/hello-world PORT=/dev/ttyUSB0 term
 ```
 
-It is also possible to flash via DFU-Util:
+## References
 
-1. Connect a mini USB cable to the USB connector labeled OTG.
-2. Power the board (e.g. by connecting a second mini USB cable to the GD-Link
-   programmer/debugger, even though we won't use it)
-3. Enter the DFU bootloader by placing the jumper on JP4 (below BOOT) in
-   position H. Press the reset button afterwards.
-4. Run `make BOARD=gd32vf103c-start PROGRAMMER=dfu-util -C path/to/app flash`
-5. Restore the JP4 jumper to position L. Afterwards press the reset button
-   again
+- [WCH CH32V307 product page][wch-product]
+- [WCH CH32V307 documentation and examples][wch-sdk]
+- [YD-CH32V307VCT6 partial schematic][board-schematic]
+- [YD-CH32V307VCT6 Ethernet example and board notes][board-notes]
+- [MounRiver Studio and WCH development tools][mounriver]
 
-## Connecting to the Serial Output
-
-By default RIOT's uses UART for `stdio`. To access that, connect a mini USB
-cable to the connector labeled "USART". In addition a jumper needs to be
-placed on JP2 in the "Usart" position; otherwise RIOT's TXD is not connected
-to the RXD of the integrated USB UART bridge. Afterwards just run:
-
-```shell
-make BOARD=gd32vf103c-start -C path/to/app term
-```
-
-Alternatively, `stdio_cdc_acm` can be used. In this case the mini USB cable
-needs to be connected to the USB connector labeled OTG.
-
-@note   It is safe to keep the jumper at JP2 in "Usart" position or even
-        remove the jumper with RIOT. PA9 is still used as UART/TXD and VBUS
-        sensing is disabled anyway.
+[board-image]: https://raw.githubusercontent.com/rtek1000/YD-CH32V307VCT6_ETHERNET-LWIP/main/IMG/YD-CH32V307VCT6-board-720x616.jpg
+[board-schematic]: https://raw.githubusercontent.com/rtek1000/YD-CH32V307VCT6_ETHERNET-LWIP/main/IMG/CH32V307VCT6_partial_schematic.png
+[board-notes]: https://github.com/rtek1000/YD-CH32V307VCT6_ETHERNET-LWIP
+[wch-product]: https://www.wch-ic.com/products/CH32V307.html
+[wch-sdk]: https://github.com/openwch/ch32v307
+[mounriver]: https://www.mounriver.com/download
