@@ -65,10 +65,64 @@ extern "C" {
 /**
  * @name    Timer configuration
  *
- * One timer via the QingKe SysTick (core timer).
+ * All eight capture/compare timers provide 16 bit counters and four channels.
+ * TIM2 remains TIMER_DEV(0), the default ztimer clock. TIM6 and TIM7 are basic
+ * timers without compare channels and cannot be used by this driver.
  * @{
  */
-#define TIMER_NUMOF             (1)
+static const timer_conf_t timer_config[] = {
+    {
+        .dev = TIM2,
+        .rcc_mask = RCC_APB1PCENR_TIM2EN,
+        .bus = APB1,
+        .irqn = TIM2_IRQn,
+    },
+    {
+        .dev = TIM3,
+        .rcc_mask = RCC_APB1PCENR_TIM3EN,
+        .bus = APB1,
+        .irqn = TIM3_IRQn,
+    },
+    {
+        .dev = TIM4,
+        .rcc_mask = RCC_APB1PCENR_TIM4EN,
+        .bus = APB1,
+        .irqn = TIM4_IRQn,
+    },
+    {
+        .dev = TIM5,
+        .rcc_mask = RCC_APB1PCENR_TIM5EN,
+        .bus = APB1,
+        .irqn = TIM5_IRQn,
+    },
+    {
+        .dev = TIM1,
+        .rcc_mask = RCC_APB2PCENR_TIM1EN,
+        .bus = APB2,
+        .irqn = TIM1_CC_IRQn,
+    },
+    {
+        .dev = TIM8,
+        .rcc_mask = RCC_APB2PCENR_TIM8EN,
+        .bus = APB2,
+        .irqn = TIM8_CC_IRQn,
+    },
+    {
+        .dev = TIM9,
+        .rcc_mask = RCC_APB2PCENR_TIM9EN,
+        .bus = APB2,
+        .irqn = TIM9_CC_IRQn,
+    },
+    {
+        .dev = TIM10,
+        .rcc_mask = RCC_APB2PCENR_TIM10EN,
+        .bus = APB2,
+        .irqn = TIM10_CC_IRQn,
+    },
+};
+
+#define TIMER_NUMOF             ARRAY_SIZE(timer_config)
+#define TIMER_0_MAX_VALUE       (0xffffU)
 /** @} */
 
 /**

@@ -30,9 +30,14 @@ extern "C" {
 #endif
 
 /**
- * @brief   timer_set() is provided by the SysTick core timer driver
+ * @brief   timer_set() is provided by the timer driver
  */
 #define PERIPH_TIMER_PROVIDES_SET
+
+/**
+ * @brief   General purpose and advanced timers have four capture/compare channels
+ */
+#define TIMER_CHANNEL_NUMOF (4U)
 
 /**
  * @brief   Peripheral buses
@@ -41,6 +46,16 @@ typedef enum {
     APB1,   /**< Advanced Peripheral Bus 1 */
     APB2,   /**< Advanced Peripheral Bus 2 */
 } bus_t;
+
+/**
+ * @brief   General purpose and advanced timer configuration
+ */
+typedef struct {
+    TIM_TypeDef *dev;       /**< Timer register base address */
+    uint32_t rcc_mask;      /**< Bit in the clock enable register */
+    bus_t bus;             /**< APB bus */
+    uint8_t irqn;          /**< PFIC interrupt number */
+} timer_conf_t;
 
 /**
  * @name    Override the default GPIO type
