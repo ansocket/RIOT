@@ -22,6 +22,16 @@
 #define ENABLE_DEBUG 0
 #include "debug.h"
 
+#if CLOCK_CORECLOCK > MHZ(8)
+#if (CLOCK_CORECLOCK % CONFIG_CLOCK_HXTAL) != 0
+#error "CLOCK_CORECLOCK must be an integer multiple of CONFIG_CLOCK_HXTAL"
+#endif
+#define CH32_PLL_MUL (CLOCK_CORECLOCK / CONFIG_CLOCK_HXTAL)
+#if (CH32_PLL_MUL < 3) || ((CH32_PLL_MUL > 16) && (CH32_PLL_MUL != 18))
+#error "CH32V30x supports PLL multipliers x3..x16 and x18"
+#endif
+#endif
+
 extern void __libc_init_array(void);
 
 void periph_clk_en(bus_t bus, uint32_t mask)
@@ -86,6 +96,28 @@ static void _clock_init(void)
     RCC->CTLR &= ~(RCC_CTLR_HSEON | RCC_CTLR_CSSON | RCC_CTLR_PLLON |
                    RCC_CTLR_PLL2ON | RCC_CTLR_PLL3ON);
     RCC->CTLR &= ~RCC_CTLR_HSEBYP;
+
+#if CLOCK_CORECLOCK > MHZ(8)
+    /* Use the external 8 MHz crystal and derive CLOCK_CORECLOCK from it. */
+    RCC->CTLR |= RCC_CTLR_HSEON;
+    while (!(RCC->CTLR & RCC_CTLR_HSERDY)) {}
+
+    RCC->CFGR0 = RCC_CFGR0_HPRE_DIV1 |
+                 RCC_CFGR0_PPRE2_DIV1 |
+                 RCC_CFGR0_PLLSRC_HSE |
+                 RCC_CFGR0_PLLMUL(CH32_PLL_MUL);
+#if CLOCK_CORECLOCK > MHZ(72)
+    RCC->CFGR0 |= RCC_CFGR0_PPRE1_DIV2;
+#else
+    RCC->CFGR0 |= RCC_CFGR0_PPRE1_DIV1;
+#endif
+
+    RCC->CTLR |= RCC_CTLR_PLLON;
+    while (!(RCC->CTLR & RCC_CTLR_PLLRDY)) {}
+
+    RCC->CFGR0 = (RCC->CFGR0 & ~RCC_CFGR0_SW_Msk) | RCC_CFGR0_SW_PLL;
+    while ((RCC->CFGR0 & RCC_CFGR0_SWS_Msk) != RCC_CFGR0_SWS_PLL) {}
+#endif
 
     /* disable and clear all clock interrupts */
     RCC->INTR = 0x00FF0000;

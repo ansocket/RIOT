@@ -37,12 +37,21 @@
 extern "C" {
 #endif
 
-/* The clock tree is not configured yet, the MCU runs from the HSI with the
- * reset prescalers (all 1) */
-#define CLOCK_CORECLOCK         MHZ(8)      /**< CPU clock frequency in Hz */
+/** CPU clock frequency in Hz; valid range is up to 144 MHz. */
+#ifndef CLOCK_CORECLOCK
+#define CLOCK_CORECLOCK         MHZ(144)
+#endif
+
+#if CLOCK_CORECLOCK > MHZ(144)
+#error "CH32V307 maximum core clock is 144 MHz"
+#endif
 
 #define CLOCK_AHB               CLOCK_CORECLOCK /**< Equal to the CPU clock */
-#define CLOCK_APB1              CLOCK_AHB       /**< Equal to the AHB clock */
+#if CLOCK_CORECLOCK > MHZ(72)
+#define CLOCK_APB1              (CLOCK_AHB / 2) /**< APB1 maximum is 72 MHz */
+#else
+#define CLOCK_APB1              CLOCK_AHB
+#endif
 #define CLOCK_APB2              CLOCK_AHB       /**< Equal to the AHB clock */
 
 /**
@@ -142,6 +151,30 @@ static const uart_conf_t uart_config[] = {
 
 #define UART_NUMOF              ARRAY_SIZE(uart_config)
 /** @} */
+
+/** @name I2C configuration
+ *  I2C1: PB6=SCL/PB7=SDA; I2C2: PB10=SCL/PB11=SDA.
+ *  External pull-ups are required. */
+static const i2c_conf_t i2c_config[] = {
+    {
+        .dev = I2C1,
+        .speed = I2C_SPEED_NORMAL,
+        .scl_pin = GPIO_PIN(PORT_B, 6),
+        .sda_pin = GPIO_PIN(PORT_B, 7),
+        .rcc_mask = RCC_APB1PCENR_I2C1EN,
+        .bus = APB1,
+    },
+    {
+        .dev = I2C2,
+        .speed = I2C_SPEED_NORMAL,
+        .scl_pin = GPIO_PIN(PORT_B, 10),
+        .sda_pin = GPIO_PIN(PORT_B, 11),
+        .rcc_mask = RCC_APB1PCENR_I2C2EN,
+        .bus = APB1,
+    },
+};
+
+#define I2C_NUMOF              ARRAY_SIZE(i2c_config)
 
 #ifdef __cplusplus
 }

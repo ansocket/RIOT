@@ -5,6 +5,7 @@ FEATURES_PROVIDED += periph_pfic
 FEATURES_PROVIDED += periph_timer
 FEATURES_PROVIDED += periph_gpio
 FEATURES_PROVIDED += periph_gpio_irq
+FEATURES_PROVIDED += periph_i2c
 # FEATURES_PROVIDED += periph_gpio_ll
 # FEATURES_PROVIDED += periph_gpio_ll_disconnect
 # FEATURES_PROVIDED += periph_gpio_ll_input_pull_down
