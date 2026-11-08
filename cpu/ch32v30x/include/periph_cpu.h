@@ -40,6 +40,20 @@ extern "C" {
 #define TIMER_CHANNEL_NUMOF (4U)
 
 /**
+ * @name    Independent watchdog configuration
+ *
+ * IWDG uses the nominal 40 kHz LSI clock and a 12-bit counter with a
+ * maximum divider of 256. Actual timeouts depend on LSI oscillator accuracy.
+ * @{
+ */
+#define WDT_CLOCK_FREQUENCY      KHZ(40)  /**< Nominal LSI frequency in Hz */
+#define NWDT_TIME_LOWER_LIMIT    (1)     /**< Minimum timeout in milliseconds */
+/** Maximum timeout in milliseconds */
+#define NWDT_TIME_UPPER_LIMIT    ((4096UL * 256UL * 1000UL) / WDT_CLOCK_FREQUENCY)
+#define WDT_HAS_STOP             (0)     /**< IWDG cannot be stopped after starting */
+/** @} */
+
+/**
  * @brief   Peripheral buses
  */
 typedef enum {
