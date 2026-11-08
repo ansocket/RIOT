@@ -105,6 +105,16 @@ typedef struct {
 } EXTI_TypeDef;
 
 /**
+ * @brief   Independent watchdog
+ */
+typedef struct {
+    volatile uint32_t CTLR;         /**< Key register */
+    volatile uint32_t PSCR;         /**< Prescaler */
+    volatile uint32_t RLDR;         /**< Counter reload value */
+    volatile uint32_t STATR;        /**< Register update status */
+} IWDG_TypeDef;
+
+/**
  * @brief   General purpose/advanced timer (16 bit values at 32 bit intervals)
  */
 typedef struct {
@@ -197,6 +207,7 @@ typedef struct {
 #define RCC_BASE                (0x40021000UL)  /**< RCC */
 #define AFIO_BASE               (0x40010000UL)  /**< AFIO */
 #define EXTI_BASE               (0x40010400UL)  /**< EXTI */
+#define IWDG_BASE               (0x40003000UL)  /**< Independent watchdog */
 #define GPIOA_BASE              (0x40010800UL)  /**< GPIO port A */
 #define GPIO_PORT_OFFSET        (0x400UL)       /**< Distance between ports */
 #define TIM1_BASE               (0x40012C00UL)  /**< TIM1 (APB2) */
@@ -230,6 +241,7 @@ typedef struct {
 #define RCC                     ((RCC_TypeDef *)RCC_BASE)
 #define AFIO                    ((AFIO_TypeDef *)AFIO_BASE)
 #define EXTI                    ((EXTI_TypeDef *)EXTI_BASE)
+#define IWDG                    ((IWDG_TypeDef *)IWDG_BASE)
 #define TIM1                    ((TIM_TypeDef *)TIM1_BASE)
 #define TIM2                    ((TIM_TypeDef *)TIM2_BASE)
 #define TIM3                    ((TIM_TypeDef *)TIM3_BASE)
@@ -293,6 +305,18 @@ typedef struct {
 /* On CH32V30x variants with the extended PLL encoding, x18 is code 0. */
 #define RCC_CFGR0_PLLMUL(mul)   (((((mul) == 18) ? 0 : ((mul) >= 15 ? (mul) - 1 : (mul) - 2)) & 0xFUL) << 18)
 #endif
+#define RCC_RSTSCKR_LSION       (1UL << 0)      /**< LSI oscillator enable */
+#define RCC_RSTSCKR_LSIRDY      (1UL << 1)      /**< LSI oscillator ready */
+/** @} */
+
+/**
+ * @name    Independent watchdog register bits
+ * @{
+ */
+#define IWDG_PSCR_PR_Msk        (7UL)          /**< Prescaler field */
+#define IWDG_RLDR_RL_Msk        (0xfffUL)      /**< 12-bit reload value */
+#define IWDG_STATR_PVU          (1UL << 0)     /**< Prescaler update pending */
+#define IWDG_STATR_RVU          (1UL << 1)     /**< Reload update pending */
 /** @} */
 
 /**

@@ -165,6 +165,39 @@ make BOARD=ch32v307_board -C tests/drivers/sdmmc
 After flashing, use `init`, `cid`, `csd`, `scr`, `size` and `read 0 1` to
 check the card. The test's write, copy and erase commands overwrite card data.
 
+### Watchdog
+
+The `periph_wdt` feature uses the independent watchdog (IWDG), clocked by
+the internal nominal 40 kHz LSI oscillator. It supports normal reset mode
+with `min_time = 0` and timeouts from 1 to 26214 milliseconds. The driver
+rounds up to the next watchdog tick; actual reset timing depends on LSI
+oscillator accuracy and does not depend on the CPU/APB clock configuration.
+Window mode, early warning callbacks and stopping a running IWDG are not
+supported. Once started, it must be kicked periodically until reset.
+
+Applications use `wdt_setup_reboot(0, timeout_ms)`, `wdt_start()` and
+`wdt_kick()` from `periph/wdt.h`. Setup alone does not start a watchdog
+that was disabled. No board pins or peripheral pin configuration are needed.
+
+Build and flash the existing watchdog test:
+
+```shell
+make BOARD=ch32v307_board -C tests/periph/wdt all flash
+```
+
+In the serial console, run:
+
+```text
+range
+setup 0 5000
+start
+kick
+```
+
+`kick` restarts the countdown. Without further kicks, the board should
+reboot approximately five seconds later. To test a stalled application,
+use `setup 0 1000` followed by `startloop` after the next reset.
+
 ## Flashing and debugging
 
 Use an external WCH-LinkE programmer/debugger in RISC-V mode. The board's USB
