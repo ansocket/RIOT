@@ -137,6 +137,21 @@ typedef struct {
     volatile uint32_t GPR;          /**< Guard time and prescaler */
 } USART_TypeDef;
 
+/**
+ * @brief   SPI controller (16 bit values at 32 bit intervals)
+ */
+typedef struct {
+    volatile uint32_t CTLR1;        /**< Control 1 */
+    volatile uint32_t CTLR2;        /**< Control 2 */
+    volatile uint32_t STATR;        /**< Status */
+    volatile uint32_t DATAR;        /**< Data */
+    volatile uint32_t CRCR;         /**< CRC polynomial */
+    volatile uint32_t RCRCR;        /**< Receive CRC */
+    volatile uint32_t TCRCR;        /**< Transmit CRC */
+    volatile uint32_t I2SCFGR;      /**< I2S configuration */
+    volatile uint32_t I2SPR;        /**< I2S prescaler */
+} SPI_TypeDef;
+
 /** @brief I2C controller (STM32F1-compatible register layout) */
 typedef struct {
     volatile uint32_t CTLR1;
@@ -202,6 +217,9 @@ typedef struct {
 #define UART8_BASE              (0x40002000UL)  /**< UART8 (APB1) */
 #define I2C1_BASE              (0x40005400UL)  /**< I2C1 (APB1) */
 #define I2C2_BASE              (0x40005800UL)  /**< I2C2 (APB1) */
+#define SPI1_BASE              (0x40013000UL)  /**< SPI1 (APB2) */
+#define SPI2_BASE              (0x40003800UL)  /**< SPI2 (APB1) */
+#define SPI3_BASE              (0x40003C00UL)  /**< SPI3 (APB1) */
 #define SDIO_BASE              (0x40018000UL)  /**< SDIO (AHB) */
 /** @} */
 
@@ -235,6 +253,9 @@ typedef struct {
 #define UART8                   ((USART_TypeDef *)UART8_BASE)
 #define I2C1                    ((I2C_TypeDef *)I2C1_BASE)
 #define I2C2                    ((I2C_TypeDef *)I2C2_BASE)
+#define SPI1                    ((SPI_TypeDef *)SPI1_BASE)
+#define SPI2                    ((SPI_TypeDef *)SPI2_BASE)
+#define SPI3                    ((SPI_TypeDef *)SPI3_BASE)
 #define SDIO                    ((SDIO_TypeDef *)SDIO_BASE)
 /** @} */
 
@@ -281,6 +302,7 @@ typedef struct {
 #define RCC_APB2PCENR_AFIOEN    (1UL << 0)      /**< AFIO */
 #define RCC_APB2PCENR_IOPAEN    (1UL << 2)      /**< GPIOA, B-E follow */
 #define RCC_APB2PCENR_TIM1EN    (1UL << 11)     /**< TIM1 */
+#define RCC_APB2PCENR_SPI1EN    (1UL << 12)     /**< SPI1 */
 #define RCC_APB2PCENR_TIM8EN    (1UL << 13)     /**< TIM8 */
 #define RCC_APB2PCENR_USART1EN  (1UL << 14)     /**< USART1 */
 #define RCC_APB2PCENR_TIM9EN    (1UL << 19)     /**< TIM9 */
@@ -289,6 +311,8 @@ typedef struct {
 #define RCC_APB1PCENR_TIM3EN    (1UL << 1)      /**< TIM3 */
 #define RCC_APB1PCENR_TIM4EN    (1UL << 2)      /**< TIM4 */
 #define RCC_APB1PCENR_TIM5EN    (1UL << 3)      /**< TIM5 */
+#define RCC_APB1PCENR_SPI2EN    (1UL << 14)     /**< SPI2 */
+#define RCC_APB1PCENR_SPI3EN    (1UL << 15)     /**< SPI3 */
 #define RCC_APB1PCENR_USART2EN  (1UL << 17)     /**< USART2 */
 #define RCC_APB1PCENR_USART3EN  (1UL << 18)     /**< USART3 */
 #define RCC_APB1PCENR_UART4EN   (1UL << 19)     /**< UART4 */
@@ -299,6 +323,23 @@ typedef struct {
 #define RCC_APB1PCENR_I2C1EN    (1UL << 21)     /**< I2C1 */
 #define RCC_APB1PCENR_I2C2EN    (1UL << 22)     /**< I2C2 */
 #define RCC_AHBPCENR_SDIOEN     (1UL << 10)     /**< SDIO */
+/** @} */
+
+/**
+ * @name    SPI register bits
+ * @{
+ */
+#define SPI_CTLR1_CPHA          (1UL << 0)      /**< Clock phase */
+#define SPI_CTLR1_CPOL          (1UL << 1)      /**< Clock polarity */
+#define SPI_CTLR1_MSTR          (1UL << 2)      /**< Master mode */
+#define SPI_CTLR1_BR_Pos        (3U)           /**< Baud rate divider position */
+#define SPI_CTLR1_BR_Msk        (7UL << 3)     /**< Baud rate divider */
+#define SPI_CTLR1_SPE           (1UL << 6)      /**< SPI enable */
+#define SPI_CTLR1_SSI           (1UL << 8)      /**< Internal slave select */
+#define SPI_CTLR1_SSM           (1UL << 9)      /**< Software slave management */
+#define SPI_STATR_RXNE         (1UL << 0)      /**< Receive buffer not empty */
+#define SPI_STATR_TXE          (1UL << 1)      /**< Transmit buffer empty */
+#define SPI_STATR_BSY          (1UL << 7)      /**< Transfer in progress */
 /** @} */
 
 /**

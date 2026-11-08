@@ -4,4 +4,5 @@ CPU_MODEL = ch32v307vct6
 # Put defined MCU peripherals here (in alphabetical order)
 FEATURES_PROVIDED += periph_i2c
 FEATURES_PROVIDED += periph_sdmmc
+FEATURES_PROVIDED += periph_spi
 FEATURES_PROVIDED += periph_uart

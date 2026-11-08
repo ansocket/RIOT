@@ -74,6 +74,51 @@ memory and SRAM.
         simultaneously. The linked partial schematic documents these
         connections.
 
+### SPI
+
+The SPI driver supports 8-bit, MSB-first master transfers in modes 0–3.
+Chip select is controlled through GPIO; pass `SPI_CS_UNDEF` to manage it
+in the application. DMA and hardware chip select are not implemented.
+
+| RIOT bus     | Peripheral | SCK  | MISO | MOSI | APB clock at 144 MHz |
+|:-------------|:-----------|:-----|:-----|:-----|:--------------------|
+| `SPI_DEV(0)` | SPI1       | PA5  | PA6  | PA7  | 144 MHz             |
+| `SPI_DEV(1)` | SPI2       | PB13 | PB14 | PB15 | 72 MHz              |
+
+SPI1 is shared with the onboard W25Q32 Flash, whose CS is PA2. Initialize
+PA2 as an output and keep it high when communicating with another device
+on SPI1. SPI3 is not configured because its default PB3/PB4 pins overlap
+JTAG and the PB4 user LED. Only default peripheral pin mappings are supported.
+
+The driver selects the fastest APB divider from 2 to 256 that does not
+exceed the requested SPI clock. Requests below APB / 256 are unsupported
+and trigger an assertion when assertions are enabled. At the default CPU
+clock, the available RIOT clock selections produce:
+
+| Requested clock  | SPI1       | SPI2       |
+|:-----------------|:-----------|:-----------|
+| `SPI_CLK_100KHZ` | unsupported | unsupported |
+| `SPI_CLK_400KHZ` | unsupported | 281.25 kHz |
+| `SPI_CLK_1MHZ`   | 562.5 kHz  | 562.5 kHz  |
+| `SPI_CLK_5MHZ`   | 4.5 MHz    | 4.5 MHz    |
+| `SPI_CLK_10MHZ`  | 9 MHz      | 9 MHz      |
+
+The divider uses the configured APB frequency, including when SDIO lowers
+the CPU clock to 96 MHz. For 100 kHz operation, the corresponding APB clock
+must be at most 25.6 MHz.
+
+Build the interactive test with:
+
+```shell
+make BOARD=ch32v307_board -C tests/periph/spi
+```
+
+For a loopback test on SPI2, connect PB15 (MOSI) to PB14 (MISO), then use
+`init 1 0 2 1 12` and `send hello`. The received bytes should match `hello`.
+Repeat with modes 1, 2 and 3 (`init 1 <mode> 2 1 12`). A logic analyzer
+can verify SCK polarity, phase, frequency and CS on PB12. SPI1 can instead
+access the onboard Flash using `SPI_DEV(0)` and `GPIO_PIN(PORT_A, 2)` as CS.
+
 ### SD memory cards over SDIO
 
 The `sdmmc` module supports SDSC, SDHC and SDXC memory cards through the

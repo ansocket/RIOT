@@ -157,6 +157,36 @@ static const uart_conf_t uart_config[] = {
 #define UART_NUMOF              ARRAY_SIZE(uart_config)
 /** @} */
 
+/**
+ * @name    SPI configuration
+ *
+ * SPI_DEV(0) is SPI1, shared with the onboard W25Q32 Flash (CS on PA2).
+ * SPI_DEV(1) is SPI2 on the expansion headers. CS is controlled as a GPIO.
+ * SPI3 is omitted: its default PB3/PB4 pins overlap JTAG and the PB4 LED.
+ * @{
+ */
+static const spi_conf_t spi_config[] = {
+    {
+        .dev = SPI1,
+        .rcc_mask = RCC_APB2PCENR_SPI1EN,
+        .sclk_pin = GPIO_PIN(PORT_A, 5),
+        .mosi_pin = GPIO_PIN(PORT_A, 7),
+        .miso_pin = GPIO_PIN(PORT_A, 6),
+        .bus = APB2,
+    },
+    {
+        .dev = SPI2,
+        .rcc_mask = RCC_APB1PCENR_SPI2EN,
+        .sclk_pin = GPIO_PIN(PORT_B, 13),
+        .mosi_pin = GPIO_PIN(PORT_B, 15),
+        .miso_pin = GPIO_PIN(PORT_B, 14),
+        .bus = APB1,
+    },
+};
+
+#define SPI_NUMOF               ARRAY_SIZE(spi_config)
+/** @} */
+
 /** @name I2C configuration
  *  I2C1: PB6=SCL/PB7=SDA; I2C2: PB10=SCL/PB11=SDA.
  *  External pull-ups are required. */

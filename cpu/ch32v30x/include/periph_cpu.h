@@ -182,6 +182,28 @@ typedef struct {
     uint8_t irqn;           /**< PFIC interrupt number */
 } uart_conf_t;
 
+/**
+ * @brief   SPI configuration (default pin mapping, software chip select)
+ */
+typedef struct {
+    SPI_TypeDef *dev;       /**< SPI register base address */
+    uint32_t rcc_mask;      /**< Bit in the clock enable register */
+    gpio_t sclk_pin;        /**< Clock pin */
+    gpio_t mosi_pin;        /**< MOSI pin, GPIO_UNDEF if unused */
+    gpio_t miso_pin;        /**< MISO pin, GPIO_UNDEF if unused */
+    bus_t bus;             /**< APB bus */
+} spi_conf_t;
+
+/**
+ * @name    Use common SPI software CS and transfer helpers
+ * @{
+ */
+#define PERIPH_SPI_NEEDS_INIT_CS
+#define PERIPH_SPI_NEEDS_TRANSFER_BYTE
+#define PERIPH_SPI_NEEDS_TRANSFER_REG
+#define PERIPH_SPI_NEEDS_TRANSFER_REGS
+/** @} */
+
 #ifndef HAVE_I2C_SPEED_T
 #define HAVE_I2C_SPEED_T
 typedef enum {
