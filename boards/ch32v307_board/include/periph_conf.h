@@ -39,7 +39,12 @@ extern "C" {
 
 /** CPU clock frequency in Hz; valid range is up to 144 MHz. */
 #ifndef CLOCK_CORECLOCK
+#if IS_USED(MODULE_PERIPH_SDMMC)
+/* The 8-bit SDIO divider must be able to generate at most 400 kHz. */
+#define CLOCK_CORECLOCK         MHZ(96)
+#else
 #define CLOCK_CORECLOCK         MHZ(144)
+#endif
 #endif
 
 #if CLOCK_CORECLOCK > MHZ(144)
@@ -175,6 +180,31 @@ static const i2c_conf_t i2c_config[] = {
 };
 
 #define I2C_NUMOF              ARRAY_SIZE(i2c_config)
+
+/**
+ * @name    SDIO configuration
+ *
+ * PC8/PC9 are shared with Ethernet; select the TF card jumpers first.
+ * TF-D0 is PC8, TF-D1 is PC9, and TF-SW is PD7 (active low).
+ * @{
+ */
+static const sdmmc_conf_t sdmmc_config[] = {
+    {
+        .dev = SDIO,
+        .clk = GPIO_PIN(PORT_C, 12),
+        .cmd = GPIO_PIN(PORT_D, 2),
+        .dat0 = GPIO_PIN(PORT_C, 8),
+        .dat1 = GPIO_PIN(PORT_C, 9),
+        .dat2 = GPIO_PIN(PORT_C, 10),
+        .dat3 = GPIO_PIN(PORT_C, 11),
+        .cd = GPIO_PIN(PORT_D, 7),
+        .cd_mode = GPIO_IN_PU,
+        .cd_active = 0,
+    },
+};
+
+#define SDMMC_CONFIG_NUMOF      (1)
+/** @} */
 
 #ifdef __cplusplus
 }

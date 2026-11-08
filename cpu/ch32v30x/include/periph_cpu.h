@@ -66,6 +66,11 @@ typedef uint32_t gpio_t;
 /** @} */
 
 /**
+ * @brief   Undefined GPIO pin
+ */
+#define GPIO_UNDEF             ((gpio_t)UINT32_MAX)
+
+/**
  * @brief   Available GPIO ports
  */
 enum {
@@ -201,6 +206,25 @@ typedef struct {
 #define PERIPH_I2C_NEED_WRITE_REG
 #define PERIPH_I2C_NEED_READ_REGS
 #define PERIPH_I2C_NEED_WRITE_REGS
+
+/**
+ * @brief   SDIO configuration (one host controller)
+ *
+ * Set dat1, dat2 and dat3 to GPIO_UNDEF for a 1-bit connection.
+ * Command and data lines require external pull-ups.
+ */
+typedef struct {
+    SDIO_TypeDef *dev;     /**< SDIO register base */
+    gpio_t clk;            /**< Clock pin */
+    gpio_t cmd;            /**< Command pin */
+    gpio_t dat0;           /**< Data bit 0 */
+    gpio_t dat1;           /**< Data bit 1, GPIO_UNDEF if unused */
+    gpio_t dat2;           /**< Data bit 2, GPIO_UNDEF if unused */
+    gpio_t dat3;           /**< Data bit 3, GPIO_UNDEF if unused */
+    gpio_t cd;             /**< Card detect pin, GPIO_UNDEF if unused */
+    gpio_mode_t cd_mode;   /**< Card detect input mode */
+    int cd_active;         /**< Card detect active level */
+} sdmmc_conf_t;
 
 #ifdef __cplusplus
 }

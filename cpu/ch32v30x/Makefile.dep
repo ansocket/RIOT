@@ -18,3 +18,9 @@ include $(RIOTCPU)/riscv_common/Makefile.dep
 ifneq (,$(filter periph_i2c,$(USEMODULE)))
   USEMODULE += ztimer_usec
 endif
+
+ifneq (,$(filter periph_sdmmc,$(USEMODULE)))
+  USEMODULE += ztimer_usec
+  FEATURES_REQUIRED += periph_gpio
+  FEATURES_REQUIRED += periph_gpio_irq
+endif

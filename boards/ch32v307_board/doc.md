@@ -15,7 +15,7 @@ microcontroller in an LQFP100 package. It features:
 - A microSD (TF) card slot
 - A W25Q32 SPI Flash (4 MiB) and a 24C64 I2C EEPROM (8 KiB)
 - Two user LEDs (PA15 and PB4) and a power LED
-- Reset, BOOT0, and USB user buttons, plus a BOOT1 jumper
+- Reset and BOOT0 buttons, plus a BOOT1 jumper
 - 8 MHz and 32.768 kHz crystals
 - GPIO expansion headers and a four-pin programming/debug header
 
@@ -59,7 +59,7 @@ memory and SRAM.
 |:--------------------- |:--------------------------------------------- |
 | User LED 1            | PA15, active high                             |
 | User LED 2            | PB4, active high                              |
-| USB user button       | PB3, active low                               |
+| TF card detect        | PD7 (TF-SW), active low                        |
 | USB FS connector      | PA11 (D-), PA12 (D+)                           |
 | USB HS connector      | PB6 (D+), PB7 (D-)                             |
 | WCH two-wire debug    | PA13 (SWDIO), PA14 (SWCLK)                     |
@@ -73,6 +73,52 @@ memory and SRAM.
         jumpers before using either interface; both cannot use these pins
         simultaneously. The linked partial schematic documents these
         connections.
+
+### SD memory cards over SDIO
+
+The `sdmmc` module supports SDSC, SDHC and SDXC memory cards through the
+native SDIO controller. The board configuration uses a 4-bit bus:
+
+| SD signal           | MCU pin |
+|:--------------------|:--------|
+| CLK                 | PC12    |
+| CMD                 | PD2     |
+| DAT0 (TF-D0)        | PC8     |
+| DAT1 (TF-D1)        | PC9     |
+| DAT2                | PC10    |
+| DAT3                | PC11    |
+| Card detect (TF-SW) | PD7     |
+
+Select the TF card jumpers before using the slot. CMD and DAT0–DAT3 require
+external pull-ups to 3.3 V (WCH recommends 47 kOhm). Ethernet cannot use PC8
+and PC9 at the same time. For a 1-bit connection, set `dat1`, `dat2` and
+`dat3` to `GPIO_UNDEF` in the board configuration.
+
+Applications enable the interface with `USEMODULE += sdmmc` and use the
+standard `sdmmc_*` functions. The controller transfers data through its FIFO
+with hardware flow control; the SD clock is limited to 4 MHz. DMA and High
+Speed mode are not implemented. Buffers do not need special alignment.
+
+When SDIO is enabled, the default CPU/AHB clock is 96 MHz. The SDIO clock is
+derived from HCLK with an 8-bit divider, so 144 MHz cannot provide the
+400 kHz identification clock. An explicit `CLOCK_CORECLOCK` override must
+keep HCLK at or below 102.8 MHz; incompatible values cause a build error.
+Applications without SDIO retain the 144 MHz default.
+
+Card detection uses TF-SW on PD7 with an internal pull-up and active-low
+polarity: a low level indicates an inserted card. Insertion and removal
+generate SDMMC card events. Reinitialize the card after insertion before
+accessing it. The detect pin and polarity are configured by `cd`, `cd_mode`
+and `cd_active`.
+
+Build the interactive test application with:
+
+```shell
+make BOARD=ch32v307_board -C tests/drivers/sdmmc
+```
+
+After flashing, use `init`, `cid`, `csd`, `scr`, `size` and `read 0 1` to
+check the card. The test's write, copy and erase commands overwrite card data.
 
 ## Flashing and debugging
 
