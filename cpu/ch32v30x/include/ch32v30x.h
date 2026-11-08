@@ -151,6 +151,31 @@ typedef struct {
 } I2C_TypeDef;
 
 /**
+ * @brief   SDIO host controller
+ */
+typedef struct {
+    volatile uint32_t POWER;        /**< Power control */
+    volatile uint32_t CLKCR;        /**< Clock control */
+    volatile uint32_t ARG;          /**< Command argument */
+    volatile uint32_t CMD;          /**< Command control */
+    volatile const uint32_t RESPCMD; /**< Response command index */
+    volatile const uint32_t RESP[4]; /**< Response words */
+    volatile uint32_t DTIMER;       /**< Data timeout in SD clock cycles */
+    volatile uint32_t DLEN;         /**< Data length */
+    volatile uint32_t DCTRL;        /**< Data control */
+    volatile const uint32_t DCOUNT; /**< Remaining data bytes */
+    volatile const uint32_t STA;    /**< Status */
+    volatile uint32_t ICR;          /**< Write-one-to-clear status flags */
+    volatile uint32_t MASK;         /**< Interrupt mask */
+    uint32_t RESERVED0[2];          /**< Reserved */
+    volatile const uint32_t FIFOCNT; /**< FIFO word count */
+    uint32_t RESERVED1[5];          /**< Reserved */
+    volatile uint32_t DCTRL2;       /**< Extended data control */
+    uint32_t RESERVED2[7];          /**< Reserved */
+    volatile uint32_t FIFO;         /**< Data FIFO */
+} SDIO_TypeDef;
+
+/**
  * @name    Peripheral base addresses
  * @{
  */
@@ -177,6 +202,7 @@ typedef struct {
 #define UART8_BASE              (0x40002000UL)  /**< UART8 (APB1) */
 #define I2C1_BASE              (0x40005400UL)  /**< I2C1 (APB1) */
 #define I2C2_BASE              (0x40005800UL)  /**< I2C2 (APB1) */
+#define SDIO_BASE              (0x40018000UL)  /**< SDIO (AHB) */
 /** @} */
 
 /**
@@ -209,6 +235,7 @@ typedef struct {
 #define UART8                   ((USART_TypeDef *)UART8_BASE)
 #define I2C1                    ((I2C_TypeDef *)I2C1_BASE)
 #define I2C2                    ((I2C_TypeDef *)I2C2_BASE)
+#define SDIO                    ((SDIO_TypeDef *)SDIO_BASE)
 /** @} */
 
 /**
@@ -271,6 +298,41 @@ typedef struct {
 #define RCC_APB1PCENR_UART8EN   (1UL << 27)     /**< UART8 */
 #define RCC_APB1PCENR_I2C1EN    (1UL << 21)     /**< I2C1 */
 #define RCC_APB1PCENR_I2C2EN    (1UL << 22)     /**< I2C2 */
+#define RCC_AHBPCENR_SDIOEN     (1UL << 10)     /**< SDIO */
+/** @} */
+
+/**
+ * @name    SDIO register bits
+ * @{
+ */
+#define SDIO_POWER_ON           (3UL)          /**< Power on */
+#define SDIO_CLKCR_CLKDIV_Msk   (0xffUL)       /**< Clock divider */
+#define SDIO_CLKCR_CLKEN        (1UL << 8)     /**< SD clock enable */
+#define SDIO_CLKCR_BYPASS       (1UL << 10)    /**< Clock divider bypass */
+#define SDIO_CLKCR_WIDBUS_Msk   (3UL << 11)    /**< Data bus width */
+#define SDIO_CLKCR_WIDBUS_4BIT  (1UL << 11)    /**< Four data lines */
+#define SDIO_CLKCR_HWFC_EN      (1UL << 14)    /**< Hardware flow control */
+#define SDIO_CMD_WAITRESP_SHORT (1UL << 6)     /**< Short response */
+#define SDIO_CMD_WAITRESP_LONG  (3UL << 6)     /**< Long response */
+#define SDIO_CMD_CPSMEN         (1UL << 10)    /**< Command state machine enable */
+#define SDIO_DCTRL_DTEN         (1UL << 0)     /**< Data state machine enable */
+#define SDIO_DCTRL_DTDIR        (1UL << 1)     /**< Card-to-host transfer */
+#define SDIO_DCTRL_DBLOCKSIZE_Pos (4U)         /**< Block size exponent position */
+#define SDIO_STA_CCRCFAIL       (1UL << 0)     /**< Command CRC failure */
+#define SDIO_STA_DCRCFAIL       (1UL << 1)     /**< Data CRC failure */
+#define SDIO_STA_CTIMEOUT       (1UL << 2)     /**< Command timeout */
+#define SDIO_STA_DTIMEOUT       (1UL << 3)     /**< Data timeout */
+#define SDIO_STA_TXUNDERR       (1UL << 4)     /**< TX FIFO underrun */
+#define SDIO_STA_RXOVERR        (1UL << 5)     /**< RX FIFO overrun */
+#define SDIO_STA_CMDREND        (1UL << 6)     /**< Response received */
+#define SDIO_STA_CMDSENT        (1UL << 7)     /**< Command sent */
+#define SDIO_STA_DATAEND        (1UL << 8)     /**< Data transfer complete */
+#define SDIO_STA_STBITERR       (1UL << 9)     /**< Start bit error */
+#define SDIO_STA_DBCKEND        (1UL << 10)    /**< Data block CRC checked */
+#define SDIO_STA_TXACT          (1UL << 12)    /**< Data transmit in progress */
+#define SDIO_STA_RXACT          (1UL << 13)    /**< Data receive in progress */
+#define SDIO_STA_TXFIFOHE       (1UL << 14)    /**< TX FIFO at least half empty */
+#define SDIO_STA_RXDAVL         (1UL << 21)    /**< RX FIFO data available */
 /** @} */
 
 /**
