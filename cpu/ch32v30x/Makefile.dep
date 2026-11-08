@@ -15,3 +15,6 @@ FEATURES_REQUIRED += periph_pfic
 # endif
 
 include $(RIOTCPU)/riscv_common/Makefile.dep
+ifneq (,$(filter periph_i2c,$(USEMODULE)))
+  USEMODULE += ztimer_usec
+endif

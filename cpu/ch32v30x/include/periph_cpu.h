@@ -177,6 +177,31 @@ typedef struct {
     uint8_t irqn;           /**< PFIC interrupt number */
 } uart_conf_t;
 
+#ifndef HAVE_I2C_SPEED_T
+#define HAVE_I2C_SPEED_T
+typedef enum {
+    I2C_SPEED_LOW       = KHZ(10),
+    I2C_SPEED_NORMAL    = KHZ(100),
+    I2C_SPEED_FAST      = KHZ(400),
+    I2C_SPEED_FAST_PLUS = MHZ(1),
+} i2c_speed_t;
+#endif
+
+/** @brief I2C configuration */
+typedef struct {
+    I2C_TypeDef *dev;
+    i2c_speed_t speed;
+    gpio_t scl_pin;
+    gpio_t sda_pin;
+    uint32_t rcc_mask;
+    bus_t bus;
+} i2c_conf_t;
+
+#define PERIPH_I2C_NEED_READ_REG
+#define PERIPH_I2C_NEED_WRITE_REG
+#define PERIPH_I2C_NEED_READ_REGS
+#define PERIPH_I2C_NEED_WRITE_REGS
+
 #ifdef __cplusplus
 }
 #endif

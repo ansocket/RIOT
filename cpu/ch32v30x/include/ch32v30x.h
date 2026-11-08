@@ -137,6 +137,19 @@ typedef struct {
     volatile uint32_t GPR;          /**< Guard time and prescaler */
 } USART_TypeDef;
 
+/** @brief I2C controller (STM32F1-compatible register layout) */
+typedef struct {
+    volatile uint32_t CTLR1;
+    volatile uint32_t CTLR2;
+    volatile uint32_t OADDR1;
+    volatile uint32_t OADDR2;
+    volatile uint32_t DATAR;
+    volatile uint32_t STAR1;
+    volatile uint32_t STAR2;
+    volatile uint32_t CKCFGR;
+    volatile uint32_t RTR;
+} I2C_TypeDef;
+
 /**
  * @name    Peripheral base addresses
  * @{
@@ -162,6 +175,8 @@ typedef struct {
 #define UART6_BASE              (0x40001800UL)  /**< UART6 (APB1) */
 #define UART7_BASE              (0x40001C00UL)  /**< UART7 (APB1) */
 #define UART8_BASE              (0x40002000UL)  /**< UART8 (APB1) */
+#define I2C1_BASE              (0x40005400UL)  /**< I2C1 (APB1) */
+#define I2C2_BASE              (0x40005800UL)  /**< I2C2 (APB1) */
 /** @} */
 
 /**
@@ -192,6 +207,8 @@ typedef struct {
 #define UART6                   ((USART_TypeDef *)UART6_BASE)
 #define UART7                   ((USART_TypeDef *)UART7_BASE)
 #define UART8                   ((USART_TypeDef *)UART8_BASE)
+#define I2C1                    ((I2C_TypeDef *)I2C1_BASE)
+#define I2C2                    ((I2C_TypeDef *)I2C2_BASE)
 /** @} */
 
 /**
@@ -201,12 +218,33 @@ typedef struct {
 #define RCC_CTLR_HSION          (1UL << 0)      /**< HSI enable */
 #define RCC_CTLR_HSIRDY         (1UL << 1)      /**< HSI ready */
 #define RCC_CTLR_HSEON          (1UL << 16)     /**< HSE enable */
+#define RCC_CTLR_HSERDY         (1UL << 17)     /**< HSE ready */
 #define RCC_CTLR_HSEBYP         (1UL << 18)     /**< HSE bypass */
 #define RCC_CTLR_CSSON          (1UL << 19)     /**< Clock security system enable */
 #define RCC_CTLR_PLLON          (1UL << 24)     /**< PLL enable */
+#define RCC_CTLR_PLLRDY         (1UL << 25)     /**< PLL ready */
 #define RCC_CTLR_PLL2ON         (1UL << 26)     /**< PLL2 enable */
 #define RCC_CTLR_PLL3ON         (1UL << 28)     /**< PLL3 enable */
+#define RCC_CFGR0_SW_Msk        (3UL << 0)      /**< System clock switch */
 #define RCC_CFGR0_SWS_Msk       (3UL << 2)      /**< System clock switch status */
+#define RCC_CFGR0_HPRE_Msk      (0xFUL << 4)    /**< AHB prescaler */
+#define RCC_CFGR0_PPRE1_Msk     (7UL << 8)      /**< APB1 prescaler */
+#define RCC_CFGR0_PPRE2_Msk     (7UL << 11)     /**< APB2 prescaler */
+#define RCC_CFGR0_PLLSRC_HSE   (1UL << 16)     /**< PLL source is HSE */
+#define RCC_CFGR0_PLLXTPRE_Msk  (1UL << 17)     /**< HSE PLL prescaler */
+#define RCC_CFGR0_PLLMUL_Msk    (0xFUL << 18)   /**< PLL multiplier */
+#define RCC_CFGR0_SW_PLL        (2UL << 0)      /**< PLL as system clock */
+#define RCC_CFGR0_SWS_PLL       (2UL << 2)      /**< PLL is system clock */
+#define RCC_CFGR0_HPRE_DIV1     (0UL << 4)
+#define RCC_CFGR0_PPRE1_DIV1    (0UL << 8)
+#define RCC_CFGR0_PPRE1_DIV2    (4UL << 8)
+#define RCC_CFGR0_PPRE2_DIV1    (0UL << 11)
+#ifdef CH32V30x_D8
+#define RCC_CFGR0_PLLMUL(mul)   (((((mul) == 18) ? 15 : ((mul) - 2)) & 0xFUL) << 18)
+#else
+/* On CH32V30x variants with the extended PLL encoding, x18 is code 0. */
+#define RCC_CFGR0_PLLMUL(mul)   (((((mul) == 18) ? 0 : ((mul) >= 15 ? (mul) - 1 : (mul) - 2)) & 0xFUL) << 18)
+#endif
 /** @} */
 
 /**
@@ -231,6 +269,8 @@ typedef struct {
 #define RCC_APB1PCENR_UART6EN   (1UL << 25)     /**< UART6 */
 #define RCC_APB1PCENR_UART7EN   (1UL << 26)     /**< UART7 */
 #define RCC_APB1PCENR_UART8EN   (1UL << 27)     /**< UART8 */
+#define RCC_APB1PCENR_I2C1EN    (1UL << 21)     /**< I2C1 */
+#define RCC_APB1PCENR_I2C2EN    (1UL << 22)     /**< I2C2 */
 /** @} */
 
 /**
