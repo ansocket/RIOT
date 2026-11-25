@@ -1,0 +1,28 @@
+USEMODULE += periph
+
+USEMODULE += cpu_common_qingke
+
+# ifneq (,$(filter periph_pm,$(USEMODULE)))
+#   FEATURES_REQUIRED += periph_wdt
+# endif
+
+# ifneq (,$(filter periph_i2c,$(USEMODULE)))
+#   USEMODULE += ztimer_usec
+# endif
+
+# ifneq (,$(filter periph_usbdev,$(USEMODULE)))
+#   USEMODULE += usbdev_synopsys_dwc2
+# endif
+
+FEATURES_REQUIRED += periph_pfic
+
+include $(RIOTCPU)/riscv_common/Makefile.dep
+ifneq (,$(filter periph_i2c,$(USEMODULE)))
+  USEMODULE += ztimer_usec
+endif
+
+ifneq (,$(filter periph_sdmmc,$(USEMODULE)))
+  USEMODULE += ztimer_usec
+  FEATURES_REQUIRED += periph_gpio
+  FEATURES_REQUIRED += periph_gpio_irq
+endif

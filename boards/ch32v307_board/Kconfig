@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2023 Gunar Schorcht
+# SPDX-License-Identifier: LGPL-2.1-only
+
+config BOARD_HAS_HXTAL
+    bool
+    help
+        Indicates that the board is providing an HXTAL oscillator
+
+config BOARD_HAS_LXTAL
+    bool
+    help
+        Indicates that the board is providing an LXTAL oscillator
+
+config CLOCK_HXTAL
+    int
+    default 8000000

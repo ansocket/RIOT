@@ -1,0 +1,8 @@
+PORT_LINUX ?= /dev/ttyACM0
+PROGRAMMER ?= wlink
+PROGRAMMERS_SUPPORTED += wlink
+
+WLINK_CHIP ?= CH32V30X
+
+# configure the serial interface
+PORT_DARWIN ?= $(firstword $(sort $(wildcard /dev/tty.SLAB_USBtoUART*)))
